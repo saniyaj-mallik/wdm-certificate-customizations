@@ -478,10 +478,14 @@ class WDM_Cert_Admin {
 
         $post_id = $post->ID;
 
-        // Get the pocket certificate value from the settings being saved
+        // Get the pocket certificate value directly from $_POST
+        // LearnDash filters out custom fields before this hook, so we must read from $_POST
         $pocket_cert = '';
-        if ( isset( $settings_field_updates['wdm_pocket_certificate'] ) ) {
-            $pocket_cert = $settings_field_updates['wdm_pocket_certificate'];
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by LearnDash
+        if ( isset( $_POST[ $settings_metabox_key ]['wdm_pocket_certificate'] ) ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            $pocket_cert = sanitize_text_field( wp_unslash( $_POST[ $settings_metabox_key ]['wdm_pocket_certificate'] ) );
         }
 
         // Save or delete meta
@@ -490,9 +494,6 @@ class WDM_Cert_Admin {
         } else {
             delete_post_meta( $post_id, '_wdm_pocket_certificate' );
         }
-
-        // Remove from settings_field_updates as we handle it ourselves
-        unset( $settings_field_updates['wdm_pocket_certificate'] );
 
         return $settings_field_updates;
     }
