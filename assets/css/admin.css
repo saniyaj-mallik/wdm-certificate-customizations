@@ -1,0 +1,119 @@
+/**
+ * WDM Certificate Customizations - Admin Styles
+ *
+ * @package WDM_Certificate_Customizations
+ */
+
+/* ===== Settings Page ===== */
+.wdm-cert-settings-wrap {
+    max-width: 900px;
+}
+
+.wdm-cert-settings-wrap h1 {
+    margin-bottom: 1.5rem;
+}
+
+.wdm-cert-settings-wrap .form-table th {
+    width: 220px;
+    padding-top: 15px;
+}
+
+.wdm-cert-settings-wrap .form-table td {
+    padding-top: 10px;
+}
+
+.wdm-cert-settings-wrap .description {
+    margin-top: 0.5rem;
+    color: #646970;
+}
+
+/* Shortcodes Reference Table */
+.wdm-cert-settings-wrap table.widefat {
+    margin-top: 1rem;
+}
+
+.wdm-cert-settings-wrap table.widefat code {
+    background: #f0f0f1;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+/* Retroactive Generation */
+#wdm-cert-retroactive-status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+#wdm-cert-retroactive-status.loading {
+    background: #fff3cd;
+    color: #856404;
+}
+
+#wdm-cert-retroactive-status.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+#wdm-cert-retroactive-status.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ===== Course Metabox ===== */
+#wdm_pocket_certificate_metabox .inside {
+    padding: 12px;
+}
+
+#wdm_pocket_certificate_metabox select {
+    width: 100%;
+    max-width: 100%;
+}
+
+#wdm_pocket_certificate_metabox .description {
+    margin-top: 8px;
+    font-style: italic;
+    color: #646970;
+}
+
+/* ===== LearnDash Settings Integration ===== */
+.sfwd-course_page_courses-builder #wdm_pocket_certificate {
+    width: 100%;
+}
+
+/* Spinner for AJAX operations */
+.wdm-cert-admin-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #0073aa;
+    border-radius: 50%;
+    animation: wdm-cert-admin-spin 0.8s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+@keyframes wdm-cert-admin-spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== Admin Notices ===== */
+.wdm-cert-admin-notice {
+    padding: 12px;
+}
+
+.wdm-cert-admin-notice p {
+    margin: 0;
+}
+
+/* ===== Plugin Page Styles ===== */
+.plugins-php tr[data-plugin="wdm-certificate-customizations/wdm-certificate-customizations.php"] .plugin-title strong {
+    color: #2271b1;
+}

@@ -1,0 +1,185 @@
+# WDM Certificate Customizations - Translation Template
+# Copyright (C) 2026 WisdmLabs
+# This file is distributed under the GPL v2 or later.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: WDM Certificate Customizations 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wisdmlabs.com\n"
+"POT-Creation-Date: 2026-02-03 00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: WP-CLI\n"
+"X-Domain: wdm-certificate-customizations\n"
+
+#: wdm-certificate-customizations.php
+msgid "WDM Certificate Customizations requires the following plugins to be active: %s"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Certificate Customizations"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "General Settings"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Verification Page"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Pocket Size Certificates"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Enable Pocket Size Certificates"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "QR Code Settings"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "QR Code Size"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Retroactive Generation"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Generate Certificate IDs for Historical Completions"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Pocket Size Certificate"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "-- None --"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Save Settings"
+msgstr ""
+
+#: includes/class-admin.php
+msgid "Settings"
+msgstr ""
+
+#: includes/class-verification.php
+msgid "Invalid Certificate ID format."
+msgstr ""
+
+#: includes/class-verification.php
+msgid "Could not decode Certificate ID."
+msgstr ""
+
+#: includes/class-verification.php
+msgid "Certificate source not found."
+msgstr ""
+
+#: includes/class-verification.php
+msgid "Certificate recipient not found."
+msgstr ""
+
+#: includes/class-verification.php
+msgid "Certificate template not found."
+msgstr ""
+
+#: templates/search-form.php
+msgid "Verify Certificate"
+msgstr ""
+
+#: templates/search-form.php
+msgid "Enter the Certificate ID to verify its authenticity."
+msgstr ""
+
+#: templates/search-form.php
+msgid "Certificate ID"
+msgstr ""
+
+#: templates/search-form.php
+msgid "Verify Certificate"
+msgstr ""
+
+#: templates/search-form.php
+msgid "Verifying..."
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Certificate Verified"
+msgstr ""
+
+#: templates/verification-result.php
+msgid "This certificate is valid and authentic."
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Standard Certificate"
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Pocket Size Certificate"
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Verification Details"
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Recipient"
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Completed"
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Status"
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Valid"
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Download Standard PDF"
+msgstr ""
+
+#: templates/verification-result.php
+msgid "Download Pocket PDF"
+msgstr ""
+
+#: templates/verification-error.php
+msgid "Certificate Not Found"
+msgstr ""
+
+#: templates/verification-error.php
+msgid "Possible reasons:"
+msgstr ""
+
+#: templates/verification-error.php
+msgid "The Certificate ID was entered incorrectly"
+msgstr ""
+
+#: templates/verification-error.php
+msgid "The certificate does not exist"
+msgstr ""
+
+#: templates/verification-error.php
+msgid "The certificate has been revoked"
+msgstr ""
+
+#: templates/verification-error.php
+msgid "Try Another Certificate"
+msgstr ""
+
+#: includes/class-qr-code.php
+msgid "Certificate QR Code"
+msgstr ""

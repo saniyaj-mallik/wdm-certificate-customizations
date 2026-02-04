@@ -1,0 +1,456 @@
+/**
+ * WDM Certificate Customizations - Frontend Styles
+ *
+ * @package WDM_Certificate_Customizations
+ */
+
+/* ===== Variables ===== */
+:root {
+    --wdm-cert-primary: #2563eb;
+    --wdm-cert-primary-hover: #1d4ed8;
+    --wdm-cert-success: #059669;
+    --wdm-cert-success-light: #d1fae5;
+    --wdm-cert-error: #dc2626;
+    --wdm-cert-error-light: #fee2e2;
+    --wdm-cert-gray-50: #f9fafb;
+    --wdm-cert-gray-100: #f3f4f6;
+    --wdm-cert-gray-200: #e5e7eb;
+    --wdm-cert-gray-300: #d1d5db;
+    --wdm-cert-gray-400: #9ca3af;
+    --wdm-cert-gray-500: #6b7280;
+    --wdm-cert-gray-600: #4b5563;
+    --wdm-cert-gray-700: #374151;
+    --wdm-cert-gray-800: #1f2937;
+    --wdm-cert-gray-900: #111827;
+    --wdm-cert-radius: 8px;
+    --wdm-cert-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --wdm-cert-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== Search Form ===== */
+.wdm-cert-search-container {
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    padding: 2rem;
+    background: var(--wdm-cert-gray-50);
+    border-radius: var(--wdm-cert-radius);
+    border: 1px solid var(--wdm-cert-gray-200);
+}
+
+.wdm-cert-search-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.wdm-cert-search-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--wdm-cert-gray-900);
+}
+
+.wdm-cert-search-description {
+    margin: 0;
+    color: var(--wdm-cert-gray-600);
+    font-size: 0.95rem;
+}
+
+.wdm-cert-search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+@media (min-width: 480px) {
+    .wdm-cert-search-form {
+        flex-direction: row;
+    }
+}
+
+.wdm-cert-search-field {
+    flex: 1;
+}
+
+.wdm-cert-id-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 1px solid var(--wdm-cert-gray-300);
+    border-radius: var(--wdm-cert-radius);
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.wdm-cert-id-input:focus {
+    outline: none;
+    border-color: var(--wdm-cert-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.wdm-cert-verify-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    background: var(--wdm-cert-primary);
+    border: none;
+    border-radius: var(--wdm-cert-radius);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.wdm-cert-verify-btn:hover {
+    background: var(--wdm-cert-primary-hover);
+}
+
+.wdm-cert-verify-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.wdm-cert-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: wdm-cert-spin 0.8s linear infinite;
+}
+
+@keyframes wdm-cert-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ===== Verification Result ===== */
+.wdm-cert-result {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.wdm-cert-verified-container {
+    background: #fff;
+    border-radius: var(--wdm-cert-radius);
+    border: 1px solid var(--wdm-cert-gray-200);
+    box-shadow: var(--wdm-cert-shadow);
+    overflow: hidden;
+}
+
+/* Success Header */
+.wdm-cert-verified-header {
+    text-align: center;
+    padding: 2rem;
+    background: var(--wdm-cert-success-light);
+    border-bottom: 1px solid var(--wdm-cert-gray-200);
+}
+
+.wdm-cert-verified-icon {
+    color: var(--wdm-cert-success);
+    margin-bottom: 0.75rem;
+}
+
+.wdm-cert-verified-title {
+    margin: 0 0 0.25rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--wdm-cert-success);
+}
+
+.wdm-cert-verified-subtitle {
+    margin: 0;
+    color: var(--wdm-cert-gray-600);
+}
+
+/* Certificate Tabs */
+.wdm-cert-tabs {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    background: var(--wdm-cert-gray-50);
+    border-bottom: 1px solid var(--wdm-cert-gray-200);
+}
+
+.wdm-cert-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--wdm-cert-gray-600);
+    background: transparent;
+    border: 1px solid var(--wdm-cert-gray-300);
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.wdm-cert-tab:hover {
+    background: var(--wdm-cert-gray-100);
+}
+
+.wdm-cert-tab.active {
+    color: var(--wdm-cert-primary);
+    background: #fff;
+    border-color: var(--wdm-cert-primary);
+}
+
+.wdm-cert-tab-radio {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    position: relative;
+}
+
+.wdm-cert-tab.active .wdm-cert-tab-radio::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+}
+
+/* Certificate Preview */
+.wdm-cert-preview-container {
+    padding: 1.5rem;
+    background: var(--wdm-cert-gray-100);
+}
+
+.wdm-cert-preview-frame {
+    background: #fff;
+    border: 1px solid var(--wdm-cert-gray-200);
+    border-radius: var(--wdm-cert-radius);
+    overflow: hidden;
+    box-shadow: var(--wdm-cert-shadow);
+}
+
+.wdm-cert-iframe {
+    display: block;
+    width: 100%;
+    height: 500px;
+    border: none;
+}
+
+@media (max-width: 768px) {
+    .wdm-cert-iframe {
+        height: 350px;
+    }
+}
+
+/* Certificate Details */
+.wdm-cert-details {
+    padding: 1.5rem;
+    border-top: 1px solid var(--wdm-cert-gray-200);
+}
+
+.wdm-cert-details-title {
+    margin: 0 0 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--wdm-cert-gray-800);
+}
+
+.wdm-cert-details-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.wdm-cert-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 1rem;
+    background: var(--wdm-cert-gray-50);
+    border-radius: var(--wdm-cert-radius);
+}
+
+.wdm-cert-detail-icon {
+    color: var(--wdm-cert-gray-400);
+    margin-bottom: 0.25rem;
+}
+
+.wdm-cert-detail-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--wdm-cert-gray-500);
+}
+
+.wdm-cert-detail-value {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--wdm-cert-gray-800);
+}
+
+.wdm-cert-detail-value a {
+    color: var(--wdm-cert-primary);
+    text-decoration: none;
+}
+
+.wdm-cert-detail-value a:hover {
+    text-decoration: underline;
+}
+
+.wdm-cert-csuid {
+    font-family: monospace;
+    font-size: 0.875rem;
+    word-break: break-all;
+}
+
+.wdm-cert-status-valid {
+    color: var(--wdm-cert-success);
+}
+
+/* Download Actions */
+.wdm-cert-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-top: 1px solid var(--wdm-cert-gray-200);
+    background: var(--wdm-cert-gray-50);
+}
+
+.wdm-cert-download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #fff;
+    background: var(--wdm-cert-primary);
+    border-radius: var(--wdm-cert-radius);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.wdm-cert-download-btn:hover {
+    background: var(--wdm-cert-primary-hover);
+    color: #fff;
+}
+
+/* ===== Error State ===== */
+.wdm-cert-error-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    background: #fff;
+    border-radius: var(--wdm-cert-radius);
+    border: 1px solid var(--wdm-cert-error);
+    background: var(--wdm-cert-error-light);
+}
+
+.wdm-cert-error-icon {
+    color: var(--wdm-cert-error);
+    margin-bottom: 1rem;
+}
+
+.wdm-cert-error-title {
+    margin: 0 0 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--wdm-cert-error);
+}
+
+.wdm-cert-error-message {
+    margin: 0 0 1.5rem;
+    color: var(--wdm-cert-gray-700);
+}
+
+.wdm-cert-error-reasons {
+    text-align: left;
+    padding: 1rem;
+    background: #fff;
+    border-radius: var(--wdm-cert-radius);
+    margin-bottom: 1.5rem;
+}
+
+.wdm-cert-error-reasons-title {
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+    color: var(--wdm-cert-gray-700);
+}
+
+.wdm-cert-error-reasons ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    color: var(--wdm-cert-gray-600);
+}
+
+.wdm-cert-error-reasons li {
+    margin-bottom: 0.25rem;
+}
+
+.wdm-cert-try-again-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    background: var(--wdm-cert-primary);
+    border-radius: var(--wdm-cert-radius);
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.wdm-cert-try-again-btn:hover {
+    background: var(--wdm-cert-primary-hover);
+    color: #fff;
+}
+
+/* ===== QR Code ===== */
+.wdm-cert-qr-code {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 480px) {
+    .wdm-cert-search-container {
+        padding: 1.5rem;
+    }
+
+    .wdm-cert-verified-header {
+        padding: 1.5rem;
+    }
+
+    .wdm-cert-tabs {
+        flex-direction: column;
+    }
+
+    .wdm-cert-tab {
+        justify-content: center;
+    }
+
+    .wdm-cert-details,
+    .wdm-cert-actions {
+        padding: 1rem;
+    }
+
+    .wdm-cert-actions {
+        flex-direction: column;
+    }
+
+    .wdm-cert-download-btn {
+        justify-content: center;
+    }
+}

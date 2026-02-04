@@ -1,0 +1,27 @@
+{
+  "framework": "playwright",
+  "version": "1.40.0",
+  "testDir": "tests/e2e",
+  "configFile": "tests/e2e/playwright.config.ts",
+  "baseUrl": "http://dave-small.local",
+  "browser": {
+    "default": "chromium",
+    "installed": ["chromium"]
+  },
+  "authentication": {
+    "method": "storage-state",
+    "users": {
+      "admin": "playwright/.auth/admin.json",
+      "student": "playwright/.auth/student.json",
+      "student2": "playwright/.auth/student2.json"
+    }
+  },
+  "server": {
+    "type": "local-by-flywheel",
+    "autoStart": false,
+    "healthCheckUrl": "http://dave-small.local",
+    "healthCheckTimeout": 30000
+  },
+  "created": "2026-02-03",
+  "status": "configured"
+}

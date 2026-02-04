@@ -1,0 +1,27 @@
+{
+  "name": "wdm-certificate-customizations-e2e",
+  "version": "1.0.0",
+  "description": "E2E tests for WDM Certificate Customizations plugin",
+  "scripts": {
+    "test": "playwright test",
+    "test:critical": "playwright test tests/critical/",
+    "test:important": "playwright test tests/important/",
+    "test:standard": "playwright test tests/standard/",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:chromium": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:mobile": "playwright test --project=mobile-chrome",
+    "test:student": "playwright test --project=student",
+    "test:anonymous": "playwright test --project=anonymous",
+    "report": "playwright show-report",
+    "codegen": "playwright codegen"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.10.0",
+    "dotenv": "^16.3.1",
+    "typescript": "^5.3.0"
+  }
+}
