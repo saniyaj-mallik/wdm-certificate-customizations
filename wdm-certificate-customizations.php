@@ -139,6 +139,9 @@ final class WDM_Certificate_Customizations {
         // Hook to allow pocket certificates access
         add_action( 'learndash_certificate_disallowed', array( $this, 'allow_pocket_certificate' ), 5 );
 
+        // Hook to allow public certificate viewing for verification
+        add_action( 'learndash_certificate_disallowed', array( $this, 'allow_public_certificate_view' ), 10 );
+
         // Enqueue assets
         add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_assets' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_assets' ) );
@@ -378,6 +381,147 @@ final class WDM_Certificate_Customizations {
         if ( ( learndash_is_admin_user() || learndash_is_group_leader_user() ) && ( intval( $cert_user_id ) !== intval( $view_user_id ) ) ) {
             wp_set_current_user( $cert_user_id );
         }
+
+        // Use LearnDash's certificate rendering
+        if ( has_action( 'learndash_tcpdf_init' ) ) {
+            do_action(
+                'learndash_tcpdf_init',
+                array(
+                    'cert_id' => $certificate_post->ID,
+                    'user_id' => $cert_user_id,
+                    'post_id' => $source_id,
+                )
+            );
+        } else {
+            require_once LEARNDASH_LMS_PLUGIN_DIR . 'includes/ld-convert-post-pdf.php';
+            learndash_certificate_post_shortcode(
+                array(
+                    'cert_id' => $certificate_post->ID,
+                    'user_id' => $cert_user_id,
+                    'post_id' => $source_id,
+                )
+            );
+        }
+        die();
+    }
+
+    /**
+     * Allow public certificate viewing for verification page
+     *
+     * This allows non-logged-in users to view certificates when accessed
+     * from the verification page with valid parameters. Instead of relying
+     * on session-based WordPress nonces (which don't work for non-logged users),
+     * we verify by checking:
+     * 1. Certificate is assigned to the source (course/quiz/group)
+     * 2. User has completed the source
+     * 3. A cert-nonce parameter is present (indicating this came from our verification page)
+     */
+    public function allow_public_certificate_view() {
+        // Only run on certificate pages
+        if ( ! is_singular( 'sfwd-certificates' ) ) {
+            return;
+        }
+
+        // Only run for non-logged-in users (logged-in users are handled elsewhere)
+        if ( is_user_logged_in() ) {
+            return;
+        }
+
+        // Check for required parameters - cert-nonce indicates this is from verification page
+        if ( ! isset( $_GET['cert-nonce'] ) || empty( $_GET['cert-nonce'] ) ) {
+            return;
+        }
+
+        // Must have user parameter for public access
+        if ( ! isset( $_GET['user'] ) || empty( $_GET['user'] ) ) {
+            return;
+        }
+
+        $certificate_post = get_post( get_the_ID() );
+        if ( ! $certificate_post ) {
+            return;
+        }
+
+        // Determine source type and ID
+        $source_id   = 0;
+        $source_type = '';
+
+        if ( isset( $_GET['course_id'] ) && ! empty( $_GET['course_id'] ) ) {
+            $source_id   = absint( $_GET['course_id'] );
+            $source_type = 'course';
+        } elseif ( isset( $_GET['quiz'] ) && ! empty( $_GET['quiz'] ) ) {
+            $source_id   = absint( $_GET['quiz'] );
+            $source_type = 'quiz';
+        } elseif ( isset( $_GET['group_id'] ) && ! empty( $_GET['group_id'] ) ) {
+            $source_id   = absint( $_GET['group_id'] );
+            $source_type = 'group';
+        }
+
+        if ( ! $source_id || ! $source_type ) {
+            return;
+        }
+
+        // Get certificate user ID from URL
+        $cert_user_id = absint( $_GET['user'] );
+        if ( ! $cert_user_id ) {
+            return;
+        }
+
+        // Verify user exists
+        $user = get_user_by( 'ID', $cert_user_id );
+        if ( ! $user ) {
+            return;
+        }
+
+        // Verify certificate is assigned to this source (standard or pocket)
+        $standard_cert_id = absint( WDM_Cert_Helper::get_assigned_certificate( $source_id, $source_type ) );
+        $pocket_cert_id   = absint( get_post_meta( $source_id, '_wdm_pocket_certificate', true ) );
+        $current_cert_id  = absint( $certificate_post->ID );
+
+        if ( $current_cert_id !== $standard_cert_id && $current_cert_id !== $pocket_cert_id ) {
+            // Not a valid certificate for this source
+            return;
+        }
+
+        // Verify user completion - this is the key security check
+        $has_completed = false;
+
+        switch ( $source_type ) {
+            case 'course':
+                $has_completed = learndash_course_completed( $cert_user_id, $source_id );
+                break;
+
+            case 'quiz':
+                $quiz_attempts = learndash_get_user_quiz_attempt( $cert_user_id, array( 'quiz' => $source_id ) );
+                if ( ! empty( $quiz_attempts ) ) {
+                    foreach ( $quiz_attempts as $attempt ) {
+                        if ( isset( $attempt['pass'] ) && $attempt['pass'] ) {
+                            $has_completed = true;
+                            break;
+                        }
+                    }
+                    // If no pass field found but has attempts, assume completed
+                    if ( ! $has_completed && ! empty( $quiz_attempts ) ) {
+                        $has_completed = true;
+                    }
+                }
+                break;
+
+            case 'group':
+                if ( function_exists( 'learndash_get_user_group_completed_timestamp' ) ) {
+                    $timestamp = learndash_get_user_group_completed_timestamp( $source_id, $cert_user_id );
+                    $has_completed = ! empty( $timestamp );
+                }
+                break;
+        }
+
+        if ( ! $has_completed ) {
+            return;
+        }
+
+        // All checks passed - render the certificate for public viewing
+        // Temporarily set current user to cert owner for rendering
+        wp_set_current_user( $cert_user_id );
 
         // Use LearnDash's certificate rendering
         if ( has_action( 'learndash_tcpdf_init' ) ) {
