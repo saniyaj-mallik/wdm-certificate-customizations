@@ -16,7 +16,7 @@ WDM Certificate Customizations extends LearnDash LMS with powerful certificate f
 
 **Key Features:**
 
-* **Dual Certificate System** - Assign both standard and pocket size certificates to courses
+* **Dual Certificate System** - Assign both standard and wallet card certificates to courses
 * **Built-in Verification** - QR code and Certificate ID verification system
 * **Verification Page** - Public page for third-party certificate verification
 * **Shortcodes** - Easy integration with certificate templates

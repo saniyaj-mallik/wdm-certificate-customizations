@@ -327,7 +327,7 @@ Invalid IDs to test:
 |------|--------|-----------------|
 | 1 | Navigate to verification page | Tabs visible |
 | 2 | Verify "Standard Certificate" tab active | Standard preview shown |
-| 3 | Click "Pocket Size Certificate" tab | Tab becomes active |
+| 3 | Click "Wallet Card" tab | Tab becomes active |
 | 4 | Verify pocket preview shows | Different iframe content |
 | 5 | Check URL parameter | ?view=pocket in URL |
 | 6 | Click back to Standard | Standard tab active |

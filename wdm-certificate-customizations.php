@@ -2,7 +2,7 @@
 /**
  * Plugin Name: WDM Certificate Customizations
  * Plugin URI: https://wisdmlabs.com
- * Description: Adds dual certificate support (Standard + Pocket Size) with built-in QR code verification system for LearnDash. Requires LearnDash Certificate Builder.
+ * Description: Adds dual certificate support (Standard + Wallet Card) with built-in QR code verification system for LearnDash. Requires LearnDash Certificate Builder.
  * Version: 1.0.0
  * Author: WisdmLabs
  * Author URI: https://wisdmlabs.com
@@ -45,6 +45,7 @@ final class WDM_Certificate_Customizations {
     public $handler;
     public $verification;
     public $shortcodes;
+    public $notifications;
 
     /**
      * Get single instance
@@ -134,7 +135,8 @@ final class WDM_Certificate_Customizations {
         $this->admin        = WDM_Cert_Admin::get_instance();
         $this->handler      = WDM_Cert_Handler::get_instance();
         $this->verification = WDM_Cert_Verification::get_instance();
-        $this->shortcodes   = WDM_Cert_Shortcodes::get_instance();
+        $this->shortcodes     = WDM_Cert_Shortcodes::get_instance();
+        $this->notifications  = WDM_Cert_Notifications::get_instance();
 
         // Hook to allow pocket certificates access
         add_action( 'learndash_certificate_disallowed', array( $this, 'allow_pocket_certificate' ), 5 );
@@ -158,6 +160,7 @@ final class WDM_Certificate_Customizations {
         require_once WDM_CERT_PLUGIN_DIR . 'includes/class-verification.php';
         require_once WDM_CERT_PLUGIN_DIR . 'includes/class-shortcodes.php';
         require_once WDM_CERT_PLUGIN_DIR . 'includes/class-upgrade.php';
+        require_once WDM_CERT_PLUGIN_DIR . 'includes/class-notifications.php';
 
         // Load test setup class (only in admin for development/testing)
         if ( is_admin() && file_exists( WDM_CERT_PLUGIN_DIR . 'includes/class-test-setup.php' ) ) {
@@ -580,11 +583,18 @@ final class WDM_Certificate_Customizations {
      */
     private function set_default_options() {
         $defaults = array(
-            'verification_page_id'      => 0,
-            'qr_code_size'              => 150,
-            'enable_pocket_certificate' => true,
-            'certificate_id_prefix'     => '',
-            'custom_css'                => '',
+            'verification_page_id'       => 0,
+            'qr_code_size'               => 150,
+            'enable_pocket_certificate'  => true,
+            'certificate_id_prefix'      => '',
+            'custom_css'                 => '',
+            'enable_email_notifications' => false,
+            'email_send_to_admin'        => false,
+            'email_send_to_group_leader' => false,
+            'email_cc'                   => '',
+            'email_user_subject'         => '',
+            'email_admin_subject'        => '',
+            'email_body'                 => '',
         );
 
         $options = get_option( 'wdm_certificate_options', array() );

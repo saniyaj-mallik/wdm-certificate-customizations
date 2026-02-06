@@ -42,7 +42,7 @@ $is_owner = isset( $certificate['is_owner'] ) ? $certificate['is_owner'] : false
         </button>
         <button type="button" class="wdm-cert-tab <?php echo $active_view === 'pocket' ? 'active' : ''; ?>" data-view="pocket">
             <span class="wdm-cert-tab-radio"></span>
-            <?php esc_html_e( 'Pocket Size Certificate', 'wdm-certificate-customizations' ); ?>
+            <?php esc_html_e( 'Wallet Card', 'wdm-certificate-customizations' ); ?>
         </button>
     </div>
     <?php endif; ?>
@@ -62,7 +62,7 @@ $is_owner = isset( $certificate['is_owner'] ) ? $certificate['is_owner'] : false
         </div>
 
         <?php if ( $has_pocket ) : ?>
-        <!-- Pocket Certificate -->
+        <!-- Wallet Card Certificate -->
         <div class="wdm-cert-preview wdm-cert-preview-pocket" style="<?php echo $active_view === 'pocket' ? '' : 'display: none;'; ?>">
             <div class="wdm-cert-preview-frame">
                 <iframe
@@ -166,7 +166,7 @@ $is_owner = isset( $certificate['is_owner'] ) ? $certificate['is_owner'] : false
                 <polyline points="7 10 12 15 17 10"></polyline>
                 <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            <?php esc_html_e( 'Download Pocket PDF', 'wdm-certificate-customizations' ); ?>
+            <?php esc_html_e( 'Download Wallet Card PDF', 'wdm-certificate-customizations' ); ?>
         </a>
         <?php endif; ?>
     </div>

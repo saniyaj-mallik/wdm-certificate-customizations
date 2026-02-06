@@ -119,7 +119,7 @@ class WDM_Cert_Admin {
         // Enable pocket certificate
         add_settings_field(
             'enable_pocket_certificate',
-            __( 'Pocket Size Certificates', 'wdm-certificate-customizations' ),
+            __( 'Wallet Cards', 'wdm-certificate-customizations' ),
             array( $this, 'render_enable_pocket_field' ),
             'wdm-certificate-settings',
             'wdm_cert_general_section'
@@ -140,6 +140,77 @@ class WDM_Cert_Admin {
             array( $this, 'render_qr_size_field' ),
             'wdm-certificate-settings',
             'wdm_cert_qr_section'
+        );
+
+        // Email Notification section
+        add_settings_section(
+            'wdm_cert_email_section',
+            __( 'Email Notification Settings', 'wdm-certificate-customizations' ),
+            array( $this, 'render_email_section' ),
+            'wdm-certificate-settings'
+        );
+
+        // Enable email notifications
+        add_settings_field(
+            'enable_email_notifications',
+            __( 'Enable Email Notifications', 'wdm-certificate-customizations' ),
+            array( $this, 'render_enable_email_field' ),
+            'wdm-certificate-settings',
+            'wdm_cert_email_section'
+        );
+
+        // Send to site admin
+        add_settings_field(
+            'email_send_to_admin',
+            __( 'Send to Site Admin', 'wdm-certificate-customizations' ),
+            array( $this, 'render_send_to_admin_field' ),
+            'wdm-certificate-settings',
+            'wdm_cert_email_section'
+        );
+
+        // Send to group leader(s)
+        add_settings_field(
+            'email_send_to_group_leader',
+            __( 'Send to Group Leader(s)', 'wdm-certificate-customizations' ),
+            array( $this, 'render_send_to_group_leader_field' ),
+            'wdm-certificate-settings',
+            'wdm_cert_email_section'
+        );
+
+        // CC emails
+        add_settings_field(
+            'email_cc',
+            __( 'CC Emails', 'wdm-certificate-customizations' ),
+            array( $this, 'render_cc_emails_field' ),
+            'wdm-certificate-settings',
+            'wdm_cert_email_section'
+        );
+
+        // User email subject
+        add_settings_field(
+            'email_user_subject',
+            __( 'User Email Subject', 'wdm-certificate-customizations' ),
+            array( $this, 'render_user_email_subject_field' ),
+            'wdm-certificate-settings',
+            'wdm_cert_email_section'
+        );
+
+        // Admin/Group Leader email subject
+        add_settings_field(
+            'email_admin_subject',
+            __( 'Admin/Group Leader Email Subject', 'wdm-certificate-customizations' ),
+            array( $this, 'render_admin_email_subject_field' ),
+            'wdm-certificate-settings',
+            'wdm_cert_email_section'
+        );
+
+        // Email body
+        add_settings_field(
+            'email_body',
+            __( 'Email Body', 'wdm-certificate-customizations' ),
+            array( $this, 'render_email_body_field' ),
+            'wdm-certificate-settings',
+            'wdm_cert_email_section'
         );
 
         // Retroactive section
@@ -165,6 +236,15 @@ class WDM_Cert_Admin {
         $output['qr_code_size']              = isset( $input['qr_code_size'] ) ? absint( $input['qr_code_size'] ) : 150;
         $output['certificate_id_prefix']     = isset( $input['certificate_id_prefix'] ) ? sanitize_text_field( $input['certificate_id_prefix'] ) : '';
         $output['custom_css']                = isset( $input['custom_css'] ) ? wp_strip_all_tags( $input['custom_css'] ) : '';
+
+        // Email notification settings
+        $output['enable_email_notifications']  = isset( $input['enable_email_notifications'] ) ? (bool) $input['enable_email_notifications'] : false;
+        $output['email_send_to_admin']         = isset( $input['email_send_to_admin'] ) ? (bool) $input['email_send_to_admin'] : false;
+        $output['email_send_to_group_leader']  = isset( $input['email_send_to_group_leader'] ) ? (bool) $input['email_send_to_group_leader'] : false;
+        $output['email_cc']                    = isset( $input['email_cc'] ) ? sanitize_text_field( $input['email_cc'] ) : '';
+        $output['email_user_subject']          = isset( $input['email_user_subject'] ) ? sanitize_text_field( $input['email_user_subject'] ) : '';
+        $output['email_admin_subject']         = isset( $input['email_admin_subject'] ) ? sanitize_text_field( $input['email_admin_subject'] ) : '';
+        $output['email_body']                  = isset( $input['email_body'] ) ? sanitize_textarea_field( $input['email_body'] ) : '';
 
         // Validate QR code size
         if ( $output['qr_code_size'] < 50 ) {
@@ -300,10 +380,10 @@ class WDM_Cert_Admin {
         ?>
         <label>
             <input type="checkbox" name="wdm_certificate_options[enable_pocket_certificate]" value="1" <?php checked( $enabled ); ?> />
-            <?php esc_html_e( 'Enable Pocket Size Certificates', 'wdm-certificate-customizations' ); ?>
+            <?php esc_html_e( 'Enable Wallet Cards', 'wdm-certificate-customizations' ); ?>
         </label>
         <p class="description">
-            <?php esc_html_e( 'Allow courses to have a second (pocket size) certificate in addition to the standard certificate.', 'wdm-certificate-customizations' ); ?>
+            <?php esc_html_e( 'Allow courses to have a second wallet card certificate in addition to the standard certificate.', 'wdm-certificate-customizations' ); ?>
         </p>
         <?php
     }
@@ -319,6 +399,117 @@ class WDM_Cert_Admin {
         <span><?php esc_html_e( 'pixels', 'wdm-certificate-customizations' ); ?></span>
         <p class="description">
             <?php esc_html_e( 'Default size for QR codes on certificates (50-500 pixels).', 'wdm-certificate-customizations' ); ?>
+        </p>
+        <?php
+    }
+
+    /**
+     * Render email notification section
+     */
+    public function render_email_section() {
+        echo '<p>' . esc_html__( 'Configure email notifications sent when certificates are awarded.', 'wdm-certificate-customizations' ) . '</p>';
+    }
+
+    /**
+     * Render enable email notifications field
+     */
+    public function render_enable_email_field() {
+        $options = get_option( 'wdm_certificate_options', array() );
+        $enabled = isset( $options['enable_email_notifications'] ) ? (bool) $options['enable_email_notifications'] : false;
+        ?>
+        <label>
+            <input type="checkbox" name="wdm_certificate_options[enable_email_notifications]" value="1" <?php checked( $enabled ); ?> />
+            <?php esc_html_e( 'Send email notifications when certificates are awarded', 'wdm-certificate-customizations' ); ?>
+        </label>
+        <?php
+    }
+
+    /**
+     * Render send to site admin field
+     */
+    public function render_send_to_admin_field() {
+        $options = get_option( 'wdm_certificate_options', array() );
+        $enabled = isset( $options['email_send_to_admin'] ) ? (bool) $options['email_send_to_admin'] : false;
+        ?>
+        <label>
+            <input type="checkbox" name="wdm_certificate_options[email_send_to_admin]" value="1" <?php checked( $enabled ); ?> />
+            <?php esc_html_e( 'Send Certificate to Site Admin', 'wdm-certificate-customizations' ); ?>
+        </label>
+        <?php
+    }
+
+    /**
+     * Render send to group leader field
+     */
+    public function render_send_to_group_leader_field() {
+        $options = get_option( 'wdm_certificate_options', array() );
+        $enabled = isset( $options['email_send_to_group_leader'] ) ? (bool) $options['email_send_to_group_leader'] : false;
+        ?>
+        <label>
+            <input type="checkbox" name="wdm_certificate_options[email_send_to_group_leader]" value="1" <?php checked( $enabled ); ?> />
+            <?php esc_html_e( 'Send Certificate to Group Leader(s)', 'wdm-certificate-customizations' ); ?>
+        </label>
+        <?php
+    }
+
+    /**
+     * Render CC emails field
+     */
+    public function render_cc_emails_field() {
+        $options = get_option( 'wdm_certificate_options', array() );
+        $cc      = isset( $options['email_cc'] ) ? $options['email_cc'] : '';
+        ?>
+        <input type="text" name="wdm_certificate_options[email_cc]" value="<?php echo esc_attr( $cc ); ?>" class="regular-text" placeholder="jon@doe.com, doe@jon.com" />
+        <p class="description">
+            <?php esc_html_e( 'Comma-separated email addresses to CC on certificate notifications.', 'wdm-certificate-customizations' ); ?>
+        </p>
+        <?php
+    }
+
+    /**
+     * Render user email subject field
+     */
+    public function render_user_email_subject_field() {
+        $options = get_option( 'wdm_certificate_options', array() );
+        $subject = isset( $options['email_user_subject'] ) ? $options['email_user_subject'] : '';
+        ?>
+        <input type="text" name="wdm_certificate_options[email_user_subject]" value="<?php echo esc_attr( $subject ); ?>" class="regular-text" placeholder="<?php esc_attr_e( 'You earned a certificate', 'wdm-certificate-customizations' ); ?>" />
+        <p class="description">
+            <?php esc_html_e( 'Subject line for the email sent to the user. Supports variable placeholders.', 'wdm-certificate-customizations' ); ?>
+        </p>
+        <?php
+    }
+
+    /**
+     * Render admin/group leader email subject field
+     */
+    public function render_admin_email_subject_field() {
+        $options = get_option( 'wdm_certificate_options', array() );
+        $subject = isset( $options['email_admin_subject'] ) ? $options['email_admin_subject'] : '';
+        ?>
+        <input type="text" name="wdm_certificate_options[email_admin_subject]" value="<?php echo esc_attr( $subject ); ?>" class="regular-text" placeholder="<?php esc_attr_e( '%User% has earned a course certificate', 'wdm-certificate-customizations' ); ?>" />
+        <p class="description">
+            <?php esc_html_e( 'Subject line for admin and group leader emails. Supports variable placeholders.', 'wdm-certificate-customizations' ); ?>
+        </p>
+        <?php
+    }
+
+    /**
+     * Render email body field
+     */
+    public function render_email_body_field() {
+        $options = get_option( 'wdm_certificate_options', array() );
+        $body    = isset( $options['email_body'] ) ? $options['email_body'] : '';
+        ?>
+        <textarea name="wdm_certificate_options[email_body]" rows="5" class="large-text" placeholder="<?php esc_attr_e( '%User% has earned a course certificate for completing %Course Name%.', 'wdm-certificate-customizations' ); ?>"><?php echo esc_textarea( $body ); ?></textarea>
+        <p class="description">
+            <strong><?php esc_html_e( 'Available variables for email subject & body:', 'wdm-certificate-customizations' ); ?></strong><br />
+            <code>%User%</code> &mdash; <?php esc_html_e( "User's Display Name", 'wdm-certificate-customizations' ); ?><br />
+            <code>%User First Name%</code> &mdash; <?php esc_html_e( "User's First Name", 'wdm-certificate-customizations' ); ?><br />
+            <code>%User Last Name%</code> &mdash; <?php esc_html_e( "User's Last Name", 'wdm-certificate-customizations' ); ?><br />
+            <code>%User Email%</code> &mdash; <?php esc_html_e( "User's Email Address", 'wdm-certificate-customizations' ); ?><br />
+            <code>%Course Name%</code> &mdash; <?php esc_html_e( 'Course Title', 'wdm-certificate-customizations' ); ?><br />
+            <code>%Group Name%</code> &mdash; <?php esc_html_e( "User's Group Name(s)", 'wdm-certificate-customizations' ); ?>
         </p>
         <?php
     }
@@ -366,7 +557,7 @@ class WDM_Cert_Admin {
                 $new_fields['wdm_pocket_certificate'] = array(
                     'name'      => 'wdm_pocket_certificate',
                     'type'      => 'select',
-                    'label'     => __( 'Pocket Size Certificate', 'wdm-certificate-customizations' ),
+                    'label'     => __( 'Wallet Card', 'wdm-certificate-customizations' ),
                     'help_text' => __( 'Optional compact certificate. Shares the same Certificate ID and QR code as the standard certificate.', 'wdm-certificate-customizations' ),
                     'value'     => $current_value,
                     'options'   => $certificate_options,
@@ -392,7 +583,7 @@ class WDM_Cert_Admin {
         // Add to courses
         add_meta_box(
             'wdm_pocket_certificate_metabox',
-            __( 'Pocket Size Certificate', 'wdm-certificate-customizations' ),
+            __( 'Wallet Card', 'wdm-certificate-customizations' ),
             array( $this, 'render_pocket_certificate_metabox' ),
             'sfwd-courses',
             'side',
@@ -402,7 +593,7 @@ class WDM_Cert_Admin {
         // Add to quizzes
         add_meta_box(
             'wdm_pocket_certificate_metabox',
-            __( 'Pocket Size Certificate', 'wdm-certificate-customizations' ),
+            __( 'Wallet Card', 'wdm-certificate-customizations' ),
             array( $this, 'render_pocket_certificate_metabox' ),
             'sfwd-quiz',
             'side',
