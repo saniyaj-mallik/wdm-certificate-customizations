@@ -26,11 +26,7 @@ test.describe('UI Interactions - Important', () => {
    */
   test.describe('TC-024: URL View Parameter', () => {
     test('No view param defaults to standard tab', async ({ page }) => {
-      // Skip if no dual certificate
-      if (!testData.certificates.validWithPocket?.csuid) {
-        test.skip();
-        return;
-      }
+      expect(testData.certificates.validWithPocket?.csuid).toBeTruthy();
 
       await verificationPage.gotoWithParams({
         cert_id: testData.certificates.validWithPocket.csuid,
@@ -43,10 +39,7 @@ test.describe('UI Interactions - Important', () => {
     });
 
     test('view=pocket selects pocket tab', async ({ page }) => {
-      if (!testData.certificates.validWithPocket?.csuid) {
-        test.skip();
-        return;
-      }
+      expect(testData.certificates.validWithPocket?.csuid).toBeTruthy();
 
       await verificationPage.gotoWithParams({
         cert_id: testData.certificates.validWithPocket.csuid,
@@ -60,10 +53,7 @@ test.describe('UI Interactions - Important', () => {
     });
 
     test('view=standard selects standard tab', async ({ page }) => {
-      if (!testData.certificates.validWithPocket?.csuid) {
-        test.skip();
-        return;
-      }
+      expect(testData.certificates.validWithPocket?.csuid).toBeTruthy();
 
       await verificationPage.gotoWithParams({
         cert_id: testData.certificates.validWithPocket.csuid,

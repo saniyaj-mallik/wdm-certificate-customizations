@@ -86,7 +86,7 @@ test.describe('Miscellaneous - Standard', () => {
    * Verification URL shortcode outputs correct URL.
    */
   test.describe('TC-042: Verification URL Shortcode', () => {
-    test.skip('Verification URL shortcode outputs correct URL', async ({ page }) => {
+    test('Verification URL shortcode outputs correct URL', async ({ page }) => {
       // This requires:
       // 1. Certificate template with [wdm_certificate_verification_url] shortcode
       // 2. Viewing the certificate
@@ -102,7 +102,7 @@ test.describe('Miscellaneous - Standard', () => {
    * Group completion generates certificate record.
    */
   test.describe('TC-043: Group Certificates', () => {
-    test.skip('Group completion creates certificate record', async ({ page }) => {
+    test('Group completion creates certificate record', async ({ page }) => {
       // This requires:
       // 1. LearnDash group with certificate
       // 2. User completing all group courses
@@ -120,7 +120,7 @@ test.describe('Miscellaneous - Standard', () => {
   test.describe('TC-044: Statistics', () => {
     test.use({ storageState: authStatePaths.admin });
 
-    test.skip('Statistics show on settings page', async ({ page }) => {
+    test('Statistics show on settings page', async ({ page }) => {
       const settingsPage = new AdminSettingsPage(page);
       await settingsPage.gotoSettingsPage();
 

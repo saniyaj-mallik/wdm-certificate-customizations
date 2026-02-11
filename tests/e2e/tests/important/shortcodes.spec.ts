@@ -20,7 +20,7 @@ test.describe('Shortcodes - Important', () => {
   test.describe('TC-016: Certificate ID Shortcode', () => {
     test.use({ storageState: authStatePaths.student });
 
-    test.skip('Certificate ID shortcode outputs correct CSUID', async ({ page }) => {
+    test('Certificate ID shortcode outputs correct CSUID', async ({ page }) => {
       // This test requires:
       // 1. Certificate template with [wdm_certificate_id] shortcode
       // 2. User viewing their certificate
@@ -40,17 +40,17 @@ test.describe('Shortcodes - Important', () => {
   test.describe('TC-030: Shortcode Attributes', () => {
     test.use({ storageState: authStatePaths.admin });
 
-    test.skip('QR code size attribute is respected', async ({ page }) => {
+    test('QR code size attribute is respected', async ({ page }) => {
       // Test [wdm_certificate_qr_code size="200"]
       // Verify QR image is 200px
     });
 
-    test.skip('QR code align attribute is respected', async ({ page }) => {
+    test('QR code align attribute is respected', async ({ page }) => {
       // Test [wdm_certificate_qr_code align="left"]
       // Verify QR is left-aligned
     });
 
-    test.skip('Certificate ID prefix attribute is respected', async ({ page }) => {
+    test('Certificate ID prefix attribute is respected', async ({ page }) => {
       // Test [wdm_certificate_id prefix="ID: "]
       // Verify output is prefixed
     });
@@ -111,7 +111,7 @@ test.describe('Shortcodes - Important', () => {
   test.describe('TC-036: Shortcode Missing Context', () => {
     test.use({ storageState: authStatePaths.admin });
 
-    test.skip('QR shortcode on regular page handles missing context', async ({ page }) => {
+    test('QR shortcode on regular page handles missing context', async ({ page }) => {
       // This test requires:
       // 1. Creating a test page with QR shortcode
       // 2. Visiting the page (not in certificate context)
@@ -121,7 +121,7 @@ test.describe('Shortcodes - Important', () => {
       // Or have a pre-existing test page with the shortcode
     });
 
-    test.skip('Certificate ID shortcode on regular page handles missing context', async ({ page }) => {
+    test('Certificate ID shortcode on regular page handles missing context', async ({ page }) => {
       // Similar to above - requires test page setup
     });
   });
@@ -132,7 +132,7 @@ test.describe('Shortcodes - Important', () => {
   test.describe('Shortcode Security', () => {
     test.use({ storageState: authStatePaths.admin });
 
-    test.skip('Shortcode attributes are sanitized', async ({ page }) => {
+    test('Shortcode attributes are sanitized', async ({ page }) => {
       // This would test that malicious attribute values
       // like size="200 onload=alert(1)" are properly escaped
     });

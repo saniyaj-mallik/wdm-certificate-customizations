@@ -57,6 +57,10 @@ class WDM_Cert_Handler {
         // Modify certificate link to point to verification page
         add_filter( 'learndash_course_certificate_link', array( $this, 'modify_certificate_link' ), 20, 3 );
         add_filter( 'learndash_quiz_certificate_link', array( $this, 'modify_quiz_certificate_link' ), 20, 2 );
+
+        // Sync certificate record when completion date is updated via admin profile
+        add_action( 'personal_options_update', array( $this, 'sync_certificate_completion_dates' ), 20 );
+        add_action( 'edit_user_profile_update', array( $this, 'sync_certificate_completion_dates' ), 20 );
     }
 
     /**
@@ -160,7 +164,9 @@ class WDM_Cert_Handler {
         $existing = get_user_meta( $user_id, $meta_key, true );
 
         if ( ! empty( $existing ) && isset( $existing['certificate_id'] ) ) {
-            // Record already exists
+            // Record already exists - fire action for email notifications
+            // This ensures admin/group leader emails are sent even on re-completion
+            do_action( 'wdm_certificate_email_resend', $existing, $existing['certificate_id'] );
             return true;
         }
 
@@ -363,5 +369,48 @@ class WDM_Cert_Handler {
     public function delete_certificate_record( $source_id, $user_id, $source_type ) {
         $meta_key = '_wdm_certificate_' . $source_type . '_' . $source_id;
         return delete_user_meta( $user_id, $meta_key );
+    }
+
+    /**
+     * Sync certificate record completion dates when admin updates user profile
+     *
+     * When the completion date is manually updated via Uncanny Toolkit's user profile
+     * section, the stored certificate record needs to be updated to match.
+     *
+     * @param int $user_id User ID being updated
+     */
+    public function sync_certificate_completion_dates( $user_id ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified by WordPress core
+        if ( ! isset( $_POST['learndash-user-courses-completion-changed'][ $user_id ] ) ) {
+            return;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $changed_courses = $_POST['learndash-user-courses-completion-changed'][ $user_id ];
+        if ( ! is_array( $changed_courses ) ) {
+            return;
+        }
+
+        foreach ( $changed_courses as $course_id ) {
+            $course_id = absint( $course_id );
+            if ( ! $course_id ) {
+                continue;
+            }
+
+            $meta_key = '_wdm_certificate_course_' . $course_id;
+            $record   = get_user_meta( $user_id, $meta_key, true );
+
+            if ( empty( $record ) || ! isset( $record['certificate_id'] ) ) {
+                continue;
+            }
+
+            // Get the fresh completion date
+            $new_completion_date = WDM_Cert_Helper::get_completion_date( $course_id, $user_id, 'course' );
+
+            if ( $new_completion_date && $record['completion_date'] != $new_completion_date ) {
+                $record['completion_date'] = absint( $new_completion_date );
+                update_user_meta( $user_id, $meta_key, $record );
+            }
+        }
     }
 }

@@ -312,6 +312,9 @@ class WDM_Cert_Helper {
     /**
      * Get completion date for a source
      *
+     * Checks user meta first (which reflects manual admin updates via Uncanny Toolkit),
+     * then falls back to LearnDash activity table.
+     *
      * @param int $source_id Source ID
      * @param int $user_id User ID
      * @param string $source_type Source type
@@ -320,6 +323,13 @@ class WDM_Cert_Helper {
     public static function get_completion_date( $source_id, $user_id, $source_type ) {
         switch ( $source_type ) {
             case 'course':
+                // Check user meta first (reflects manual admin edits)
+                $meta_timestamp = get_user_meta( $user_id, 'course_completed_' . $source_id, true );
+                if ( ! empty( $meta_timestamp ) ) {
+                    return absint( $meta_timestamp );
+                }
+
+                // Fall back to activity table
                 $activity = learndash_get_user_activity( array(
                     'user_id'       => $user_id,
                     'post_id'       => $source_id,

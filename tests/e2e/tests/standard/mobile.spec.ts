@@ -104,10 +104,7 @@ test.describe('Mobile Responsive - Standard', () => {
     });
 
     test('Tabs work on mobile (if dual cert)', async ({ page }) => {
-      if (!testData.certificates.validWithPocket?.csuid) {
-        test.skip();
-        return;
-      }
+      expect(testData.certificates.validWithPocket?.csuid).toBeTruthy();
 
       const verificationPage = new VerificationPage(page);
       await verificationPage.gotoVerificationPage();

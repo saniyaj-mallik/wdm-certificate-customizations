@@ -340,7 +340,7 @@ test.describe('Plugin Integration - WDM + Uncanny', () => {
   test.describe('INT-007: Completion-Based Generation', () => {
     test.use({ storageState: authStatePaths.admin });
 
-    test.skip('Completing course generates WDM certificate record', async ({ page }) => {
+    test('Completing course generates WDM certificate record', async ({ page }) => {
       // This test requires simulating course completion
       // which needs specific LearnDash setup
 

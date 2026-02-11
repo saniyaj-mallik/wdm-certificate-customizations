@@ -197,8 +197,8 @@ class WDM_Cert_Verification {
         $pocket_cert_id = WDM_Cert_Helper::get_pocket_certificate( $decoded['source_id'], $source_type );
         $pocket_cert = $pocket_cert_id ? get_post( $pocket_cert_id ) : null;
 
-        // Get completion date
-        $completion_date = $record ? $record['completion_date'] : WDM_Cert_Helper::get_completion_date( $decoded['source_id'], $decoded['user_id'], $source_type );
+        // Get completion date - always use fresh data to reflect admin edits
+        $completion_date = WDM_Cert_Helper::get_completion_date( $decoded['source_id'], $decoded['user_id'], $source_type );
 
         // Build certificate data
         $certificate_data = array(

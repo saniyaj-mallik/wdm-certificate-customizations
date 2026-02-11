@@ -46,10 +46,13 @@ class WDM_Cert_Notifications {
      */
     private function init_hooks() {
         add_action( 'wdm_certificate_record_generated', array( $this, 'send_certificate_email' ), 10, 2 );
+        add_action( 'wdm_certificate_email_resend', array( $this, 'send_certificate_email' ), 10, 2 );
     }
 
     /**
      * Get plugin email settings
+     *
+     * Reads stored options and ensures boolean fields are properly cast.
      *
      * @return array Email settings with defaults.
      */
@@ -65,7 +68,14 @@ class WDM_Cert_Notifications {
             'email_body'                 => '',
         );
 
-        return wp_parse_args( $options, $defaults );
+        $settings = wp_parse_args( $options, $defaults );
+
+        // Explicitly cast boolean fields to handle serialization edge cases
+        $settings['enable_email_notifications'] = filter_var( $settings['enable_email_notifications'], FILTER_VALIDATE_BOOLEAN );
+        $settings['email_send_to_admin']        = filter_var( $settings['email_send_to_admin'], FILTER_VALIDATE_BOOLEAN );
+        $settings['email_send_to_group_leader'] = filter_var( $settings['email_send_to_group_leader'], FILTER_VALIDATE_BOOLEAN );
+
+        return $settings;
     }
 
     /**
@@ -126,6 +136,9 @@ class WDM_Cert_Notifications {
     /**
      * Get group leaders for a user in a specific course context
      *
+     * Returns emails of all group administrators for groups that both contain
+     * the user and are associated with the course.
+     *
      * @param int $user_id   User ID.
      * @param int $source_id Course/source ID.
      * @return array Array of group leader email addresses.
@@ -133,32 +146,39 @@ class WDM_Cert_Notifications {
     private function get_group_leader_emails( $user_id, $source_id ) {
         $leader_emails = array();
 
-        if ( ! function_exists( 'learndash_get_course_groups' ) ||
-             ! function_exists( 'learndash_get_users_group_ids' ) ||
+        if ( ! function_exists( 'learndash_get_users_group_ids' ) ||
              ! function_exists( 'learndash_get_groups_administrators' ) ) {
             return $leader_emails;
         }
 
-        $course_groups = learndash_get_course_groups( $source_id, true );
-        $user_groups   = learndash_get_users_group_ids( $user_id, true );
+        // Get user's groups
+        $user_groups = learndash_get_users_group_ids( $user_id, true );
 
-        if ( empty( $course_groups ) || empty( $user_groups ) ) {
+        if ( empty( $user_groups ) ) {
             return $leader_emails;
         }
 
-        $common_groups = array_intersect( $course_groups, $user_groups );
+        // Optionally filter by course groups if function exists
+        $target_groups = $user_groups;
+        if ( function_exists( 'learndash_get_course_groups' ) ) {
+            $course_groups = learndash_get_course_groups( $source_id, true );
+            if ( ! empty( $course_groups ) ) {
+                $target_groups = array_intersect( $course_groups, $user_groups );
+            }
+        }
 
-        foreach ( $common_groups as $group_id ) {
+        if ( empty( $target_groups ) ) {
+            return $leader_emails;
+        }
+
+        foreach ( $target_groups as $group_id ) {
             $leaders = learndash_get_groups_administrators( $group_id, true );
             if ( empty( $leaders ) ) {
                 continue;
             }
 
             foreach ( $leaders as $leader ) {
-                if ( function_exists( 'learndash_is_group_leader_of_user' ) &&
-                     learndash_is_group_leader_of_user( $leader->ID, $user_id ) ) {
-                    $leader_emails[] = $leader->user_email;
-                }
+                $leader_emails[] = $leader->user_email;
             }
         }
 

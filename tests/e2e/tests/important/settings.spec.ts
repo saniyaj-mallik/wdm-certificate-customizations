@@ -162,7 +162,7 @@ test.describe('Settings - Important', () => {
    * Warning shown if verification page missing shortcode.
    */
   test.describe('TC-031: Missing Shortcode Warning', () => {
-    test.skip('Page without shortcode shows no verification UI', async ({ page }) => {
+    test('Page without shortcode shows no verification UI', async ({ page }) => {
       // This test requires creating a page without the shortcode
       // and setting it as the verification page
 
@@ -180,7 +180,7 @@ test.describe('Settings - Important', () => {
    * Admin notice displays when verification page not configured.
    */
   test.describe('TC-033: Missing Page Notice', () => {
-    test.skip('Warning notice when no verification page set', async ({ page }) => {
+    test('Warning notice when no verification page set', async ({ page }) => {
       const settingsPage = new AdminSettingsPage(page);
 
       // This test requires:

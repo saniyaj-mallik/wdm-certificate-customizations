@@ -19,7 +19,7 @@ test.describe('Edge Cases - Important', () => {
    * Certificate for deleted user shows appropriate error.
    */
   test.describe('TC-021: Deleted User', () => {
-    test.skip('Certificate for deleted user shows error', async ({ page }) => {
+    test('Certificate for deleted user shows error', async ({ page }) => {
       // This test requires:
       // 1. Creating a certificate record
       // 2. Deleting the user
@@ -44,7 +44,7 @@ test.describe('Edge Cases - Important', () => {
    * Certificate for deleted course shows appropriate error.
    */
   test.describe('TC-022: Deleted Course', () => {
-    test.skip('Certificate for deleted course shows error', async ({ page }) => {
+    test('Certificate for deleted course shows error', async ({ page }) => {
       // This test requires:
       // 1. Creating a certificate record for a course
       // 2. Deleting the course
@@ -71,7 +71,7 @@ test.describe('Edge Cases - Important', () => {
   test.describe('TC-028: Multiple Completions', () => {
     test.use({ storageState: authStatePaths.student });
 
-    test.skip('Re-completion does not create duplicate record', async ({ page }) => {
+    test('Re-completion does not create duplicate record', async ({ page }) => {
       // This test requires:
       // 1. Student completes course
       // 2. Certificate record is created with CSUID

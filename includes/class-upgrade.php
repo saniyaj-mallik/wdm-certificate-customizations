@@ -91,28 +91,68 @@ class WDM_Cert_Upgrade {
     /**
      * Get all course completions
      *
+     * Checks both the learndash_user_activity table AND course_completed_ user meta
+     * to catch completions set via the Uncanny Toolkit admin module.
+     *
      * @return array Course completions
      */
     private function get_course_completions() {
         global $wpdb;
 
-        $table_name = $wpdb->prefix . 'learndash_user_activity';
+        $completions = array();
+        $seen = array(); // Track user_id-course_id pairs to avoid duplicates
 
-        // Check if table exists
-        if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) !== $table_name ) {
-            return array();
+        // Source 1: LearnDash activity table
+        $table_name = $wpdb->prefix . 'learndash_user_activity';
+        $table_exists = $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) === $table_name;
+
+        if ( $table_exists ) {
+            $results = $wpdb->get_results( $wpdb->prepare(
+                "SELECT DISTINCT user_id, post_id, activity_completed
+                 FROM {$table_name}
+                 WHERE activity_type = %s
+                 AND activity_completed > 0
+                 ORDER BY activity_completed ASC",
+                'course'
+            ), ARRAY_A );
+
+            if ( $results ) {
+                foreach ( $results as $row ) {
+                    $key = $row['user_id'] . '_' . $row['post_id'];
+                    if ( ! isset( $seen[ $key ] ) ) {
+                        $completions[] = $row;
+                        $seen[ $key ] = true;
+                    }
+                }
+            }
         }
 
-        $results = $wpdb->get_results( $wpdb->prepare(
-            "SELECT DISTINCT user_id, post_id, activity_completed
-             FROM {$table_name}
-             WHERE activity_type = %s
-             AND activity_completed > 0
-             ORDER BY activity_completed ASC",
-            'course'
-        ), ARRAY_A );
+        // Source 2: course_completed_ user meta (set by Uncanny Toolkit admin module)
+        $meta_results = $wpdb->get_results(
+            "SELECT user_id, meta_key, meta_value
+             FROM {$wpdb->usermeta}
+             WHERE meta_key LIKE 'course_completed_%'
+             AND meta_value > 0",
+            ARRAY_A
+        );
 
-        return $results ? $results : array();
+        if ( $meta_results ) {
+            foreach ( $meta_results as $row ) {
+                if ( preg_match( '/^course_completed_(\d+)$/', $row['meta_key'], $matches ) ) {
+                    $key = $row['user_id'] . '_' . $matches[1];
+                    if ( ! isset( $seen[ $key ] ) ) {
+                        $completions[] = array(
+                            'user_id'            => $row['user_id'],
+                            'post_id'            => $matches[1],
+                            'activity_completed' => $row['meta_value'],
+                        );
+                        $seen[ $key ] = true;
+                    }
+                }
+            }
+        }
+
+        return $completions;
     }
 
     /**
@@ -190,22 +230,13 @@ class WDM_Cert_Upgrade {
      *
      * @param array $completion Completion data
      * @param string $source_type Source type
-     * @return bool True if certificate record was created
+     * @return bool True if certificate record was created or updated
      */
     private function process_completion( $completion, $source_type ) {
         $user_id   = absint( $completion['user_id'] );
         $source_id = absint( $completion['post_id'] );
 
         if ( ! $user_id || ! $source_id ) {
-            return false;
-        }
-
-        // Check if record already exists
-        $meta_key = '_wdm_certificate_' . $source_type . '_' . $source_id;
-        $existing = get_user_meta( $user_id, $meta_key, true );
-
-        if ( ! empty( $existing ) && isset( $existing['certificate_id'] ) ) {
-            // Record already exists
             return false;
         }
 
@@ -217,11 +248,30 @@ class WDM_Cert_Upgrade {
             return false;
         }
 
-        // Generate CSUID
+        // Generate expected CSUID
         $csuid = WDM_Cert_Helper::encode_csuid( $cert_id, $source_id, $user_id );
 
         if ( empty( $csuid ) ) {
             return false;
+        }
+
+        // Check if record already exists
+        $meta_key = '_wdm_certificate_' . $source_type . '_' . $source_id;
+        $existing = get_user_meta( $user_id, $meta_key, true );
+
+        if ( ! empty( $existing ) && isset( $existing['certificate_id'] ) ) {
+            // Record exists - check if certificate_id needs updating
+            if ( strtoupper( $existing['certificate_id'] ) === strtoupper( $csuid ) ) {
+                // Already up-to-date
+                return false;
+            }
+
+            // Update old certificate_id to new CSUID format
+            $existing['certificate_id'] = $csuid;
+            $existing['standard_cert']  = absint( $cert_id );
+            $existing['pocket_cert']    = absint( WDM_Cert_Helper::get_pocket_certificate( $source_id, $source_type ) );
+            update_user_meta( $user_id, $meta_key, $existing );
+            return true;
         }
 
         // Get pocket certificate

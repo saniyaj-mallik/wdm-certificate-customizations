@@ -187,11 +187,7 @@ test.describe('Certificate Verification - Critical', () => {
    * Tab switching between Standard and Pocket certificates works.
    */
   test('TC-007: Tab switching works for dual certificates', async ({ page }) => {
-    // Skip if no dual certificate test data
-    if (!testData.certificates.validWithPocket?.csuid) {
-      test.skip();
-      return;
-    }
+    expect(testData.certificates.validWithPocket?.csuid).toBeTruthy();
 
     await verificationPage.gotoVerificationPage();
 
@@ -229,11 +225,7 @@ test.describe('Certificate Verification - Critical', () => {
    * TC-007 Edge Case: URL view parameter pre-selects tab
    */
   test('TC-007-edge: URL view=pocket pre-selects pocket tab', async ({ page }) => {
-    // Skip if no dual certificate test data
-    if (!testData.certificates.validWithPocket?.csuid) {
-      test.skip();
-      return;
-    }
+    expect(testData.certificates.validWithPocket?.csuid).toBeTruthy();
 
     // Navigate with view parameter
     await verificationPage.gotoWithParams({

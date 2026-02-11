@@ -23,7 +23,7 @@ test.describe('Certificate Generation - Critical', () => {
   test.describe('TC-003: Course Completion Generation', () => {
     test.use({ storageState: authStatePaths.student });
 
-    test.skip('Course completion creates certificate record', async ({ page }) => {
+    test('Course completion creates certificate record', async ({ page }) => {
       // This test requires:
       // 1. A course with certificate assigned
       // 2. Student enrolled in the course
@@ -42,7 +42,7 @@ test.describe('Certificate Generation - Critical', () => {
       // 3. Certificate link should point to verification page
     });
 
-    test.skip('Certificate link points to verification page', async ({ page }) => {
+    test('Certificate link points to verification page', async ({ page }) => {
       // After course completion, verify the certificate link
       // Navigate to course completion page or profile
 
@@ -219,7 +219,7 @@ test.describe('Certificate Generation - Critical', () => {
   test.describe('TC-012: Certificate Link Modification', () => {
     test.use({ storageState: authStatePaths.student });
 
-    test.skip('Certificate link is modified to verification page', async ({ page }) => {
+    test('Certificate link is modified to verification page', async ({ page }) => {
       // This requires navigating to a page where LearnDash shows
       // the certificate link (course completion, profile, etc.)
 

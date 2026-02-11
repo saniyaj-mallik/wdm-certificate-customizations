@@ -58,11 +58,7 @@ test.describe('Certificate Download - Critical', () => {
     });
 
     test('Owner can download pocket PDF when available', async ({ page }) => {
-      // Skip if no dual certificate test data
-      if (!testData.certificates.validWithPocket?.csuid) {
-        test.skip();
-        return;
-      }
+      expect(testData.certificates.validWithPocket?.csuid).toBeTruthy();
 
       const verificationPage = new VerificationPage(page);
       await verificationPage.gotoVerificationPage();

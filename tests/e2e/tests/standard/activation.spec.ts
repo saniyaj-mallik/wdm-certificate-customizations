@@ -18,7 +18,7 @@ test.describe('Plugin Activation - Standard', () => {
    * Plugin activation runs all setup tasks.
    */
   test.describe('TC-034: Activation Hook', () => {
-    test.skip('Activation creates default options', async ({ page }) => {
+    test('Activation creates default options', async ({ page }) => {
       // This test requires:
       // 1. Deactivating the plugin
       // 2. Deleting plugin options
@@ -28,11 +28,11 @@ test.describe('Plugin Activation - Standard', () => {
       // Would need WP-CLI access to manage plugin state
     });
 
-    test.skip('Activation creates verification page', async ({ page }) => {
+    test('Activation creates verification page', async ({ page }) => {
       // Part of TC-015, tested there
     });
 
-    test.skip('Activation flushes rewrite rules', async ({ page }) => {
+    test('Activation flushes rewrite rules', async ({ page }) => {
       // Would need to verify pretty permalinks work after activation
     });
   });
@@ -43,7 +43,7 @@ test.describe('Plugin Activation - Standard', () => {
    * Plugin deactivation cleans up rewrite rules.
    */
   test.describe('TC-035: Deactivation Hook', () => {
-    test.skip('Deactivation preserves options', async ({ page }) => {
+    test('Deactivation preserves options', async ({ page }) => {
       // This test requires:
       // 1. Noting current options
       // 2. Deactivating the plugin
@@ -53,7 +53,7 @@ test.describe('Plugin Activation - Standard', () => {
       // Would need WP-CLI access
     });
 
-    test.skip('Deactivation preserves user meta', async ({ page }) => {
+    test('Deactivation preserves user meta', async ({ page }) => {
       // Certificate records should not be deleted on deactivation
     });
   });
